@@ -1,0 +1,50 @@
+{
+  "name": "streetscape.gl-quick-start",
+  "description": "A template app of streetscape.gl",
+  "version": "0.1.0",
+  "scripts": {
+    "start-local": "webpack-dev-server --env.local --progress --hot --open",
+    "start-streaming-local": "webpack-dev-server --env.local --env.stream --progress --hot --open",
+    "start-live-local": "webpack-dev-server --env.local --env.live --progress --hot --open",
+    "start": "webpack-dev-server --progress --hot --open",
+    "start-streaming": "webpack-dev-server --env.stream --progress --hot --open",
+    "start-live": "webpack-dev-server --env.live --progress --hot --open"
+  },
+  "dependencies": {
+    "@deck.gl/core": "^8.9.19",
+    "@deck.gl/mesh-layers": "^8.9.19",
+    "@deck.gl/react": "^8.9.19",
+    "@loaders.gl/core": "^3.4.4",
+    "@loaders.gl/gltf": "^3.4.4",
+    "@loaders.gl/obj": "^3.4.4",
+    "@luma.gl/core": "^8.5.20",
+    "copy-webpack-plugin": "^6.4.1",
+    "d3": "^7.8.5",
+    "deck.gl": "^8.9.19",
+    "multiselect-react-dropdown": "^2.0.25",
+    "react": "^16.3.0",
+    "react-codemirror": "^1.0.0",
+    "react-dom": "^16.3.0",
+    "react-json-view": "^1.21.3",
+    "react-map-gl-draw": "^1.0.4",
+    "react-modal": "^3.15.1",
+    "streetscape.gl": "^1.0.0",
+    "webpack-dev-server": "3.11.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "@webpack-cli/serve": "^1.6.1",
+    "babel-loader": "^8.0.0",
+    "css-loader": "^5.2.7",
+    "extract-loader": "^5.1.0",
+    "file-loader": "^6.2.0",
+    "handlebars-loader": "^1.7.2",
+    "source-map-loader": "^0.2.3",
+    "webpack": "^4.20.0",
+    "webpack-cli": "^3.1.2"
+  }
+}

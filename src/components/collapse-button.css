@@ -1,0 +1,40 @@
+.collapse-button{
+    width:310px; 
+    height:30px;
+    padding:0px;
+    border-bottom: 1px solid #e6e6e6;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    position: absolute;
+    top:0px;
+    left: 0px;
+    z-index: 2;
+    background: white;
+    
+}
+@keyframes close {
+    0%   {padding-left:150px;}
+    100% {padding-left:100px;}
+  }
+@keyframes open {
+    0%   {padding-left:150px;}
+    100% {padding-left:200px;}
+  }
+
+.collapse-button-open p:hover{
+    cursor: pointer;
+    animation-name:  close;
+}
+.collapse-button-open p{line-height: 30px;width: 100%;padding-left:150px;;margin: 0px;animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-direction:normal;}
+
+.collapse-button-close p:hover{
+        cursor: pointer;
+        animation-name: open;
+    }
+.collapse-button-close p{line-height: 30px;width: 100%;padding-left:150px;;margin: 0px;animation-duration: 1s;
+        animation-iteration-count: infinite;
+        animation-direction:normal;}
+
+.collapse-button-close span{line-height: 30px;}
+

@@ -1,0 +1,309 @@
+.radar-container{
+    margin: auto;
+}
+.radar {
+    width: 300px;/*$size*/;
+    height: 300px;/*$size;*/
+    background-size: 300px 300px;/*$size $size;*/
+    position: relative;
+    left: 5px;
+    margin-left:-150; /*-$size / 2;*/
+    margin-top:-150; /*-$size / 2;*/
+    border-radius:100%;
+  }
+  
+  .radar img.compass{
+      width: 300px;
+      height: 300px;
+      animation-name: rotate;
+      animation-duration: 5s;
+      animation-iteration-count: infinite;
+      animation-timing-function: linear;
+      animation-direction:alternate;
+      border-radius: 50%;
+      background:#e6e6e6;
+  }
+  @keyframes rotate{
+      from{ transform: rotate(-60deg); }
+      to{ transform: rotate(60deg); }
+  }
+  
+  
+  .radar:hover {
+    background: none;
+    opacity:1;
+  }
+  
+  .radar .pointer {
+    position: absolute;
+    z-index: 1024;
+    left: 10.5820106%;
+    right: 10.5820106%;
+    top: 10.5820106%;
+    bottom: 50%;
+    will-change: transform;
+    transform-origin: 50% 100%;
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    background-image: linear-gradient(135deg, 
+      rgba(5, 162, 185, 0.8) 0%, 
+      rgba(0, 0, 0, 0.02) 70%,
+      rgba(0, 0, 0, 0) 100%
+      );
+    clip-path: polygon(100% 0, 
+      100% 10%,
+      50% 100%, 0 100%, 0 0);
+    
+    animation: rotate360 3s infinite linear;
+  }
+  
+  .radar .pointer:after {
+    content: "";
+    position: absolute;
+    width: 50%;
+    bottom: -1px;
+    border-top: 2px solid rgba(2, 231, 244, 0.8);
+    box-shadow: 0 0 3px rgba(0, 231, 244, 0.6);
+    border-radius: 9px;
+  }
+  
+  .shadow {
+    position: absolute;
+    left: 11%;
+    top: 11%;
+    right: 11%;
+    bottom: 11%;
+    margin: auto;
+    border-radius: 9999px;
+    box-shadow: 0 0 66px 6px #A51414;
+    animation: shadow 1s infinite ease;
+  }
+  
+  
+  @keyframes rotate360 {
+    0% {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(-360deg);
+    }
+  }
+  
+  @keyframes shadow {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
+  }
+  
+  
+  
+  
+  @-webkit-keyframes blink {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  
+  @-moz-keyframes blink {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  
+  @keyframes blink {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+  
+  
+  .dot {
+    opacity: 0;
+    border: 3px solid black;
+    border-radius: 100%;
+    position:absolute;
+    -webkit-animation: blink 2s ease-out;
+    -webkit-animation-iteration-count: infinite;
+    -moz-animation: blink 2s ease-out;
+    -moz-animation-iteration-count: infinite;
+    animation: blink 2s ease-out;
+    animation-iteration-count: infinite;
+    z-index: 250000;
+  }
+  .dot:hover{
+      cursor:pointer;
+      animation: none;
+      opacity: 1;
+  }
+  .dot.pos1 {
+      left: 150px;
+      top: 95px;
+  }
+  
+  
+  .dot.pos2 {
+    left:70px;
+    top:80px;
+    -webkit-animation-delay: 0.6s;
+    -moz-animation-delay: 0.6s;
+    animation-delay: 0.6s;
+  }
+  .dot.pos3 {
+    left:30px;
+    top:80px;
+    -webkit-animation-delay: 0.8s;
+    -moz-animation-delay: 0.8s;
+    animation-delay: 0.8s;
+  }
+ 
+  .dot.shared-lidar{
+    background-color:rgb(51, 14, 218);
+    border: 3px solid rgb(51, 14, 218);
+  }
+  .dot.tracking{
+   left:190px;
+   top:120px;
+    background-color:red;
+    -webkit-animation-delay: 0.2s;
+    -moz-animation-delay: 0.2s;
+    animation-delay: 0.2s;
+    animation: blink 0.5s ease-out;
+    animation-iteration-count: infinite;
+    border: 3px solid red;
+  }
+  .dot.tracking:hover{
+      animation: none;
+      opacity: 1;
+  }
+  
+  
+  
+  .ringbase {
+    position:absolute;
+    left:-35px;
+    top:-35px;
+    width:70px;
+    height:70px;
+    border-radius:35px;
+    opacity:0.0;
+    z-index:10;
+  }
+  
+  .ring1 {
+    box-shadow:0 0 2px 1px #8eb716, inset 0 0 2px 1px red;
+    -moz-animation: ring 2s ease-in-out;
+    -moz-animation-iteration-count: infinite;
+    -webkit-animation: ring 2s ease-in-out;
+    -webkit-animation-iteration-count: infinite;
+    animation: ring 2s ease-in-out;
+    animation-iteration-count: infinite;
+  }
+  
+  .ring2 {
+    box-shadow:0 0 1px 0px #cbe572, inset 0 0 1px 0px #cbe572;
+    -moz-animation: ring 2s ease-in-out;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-delay: 0.5s;
+    -webkit-animation: ring 2s ease-in-out;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-delay: 0.5s;
+    animation: ring 2s ease-in-out;
+    animation-iteration-count: infinite;
+    animation-delay: 0.5s;
+  }
+  @-webkit-keyframes ring {
+    0% {-webkit-transform: scale(0.4, 0.4); opacity: 0.0;}
+    50% {opacity: 0.6;}
+    100% {-webkit-transform: scale(1.1, 1.1); opacity: 0.0;}
+  }
+  
+  @-moz-keyframes ring {
+    0% {-moz-transform: scale(0.4, 0.4); opacity: 0.0;}
+    50% {opacity: 0.6;}
+    100% {-moz-transform: scale(1.1, 1.1); opacity: 0.0;}
+  }
+  
+  @keyframes ring {
+    0% {transform: scale(0.4, 0.4); opacity: 0.0;}
+    50% {opacity: 0.6;}
+    100% {transform: scale(1.1, 1.1); opacity: 0.0;}
+  }
+  
+  .axes .axis-y{
+      position:absolute;
+      width:1px;
+      height:300px;
+      background:black;
+      left:150px;
+      top:0px;
+   }
+  .axes .axis-x{
+      position:absolute;
+      width:300px;
+      height:1px;
+      background:black;
+      top:150px;
+      left:0px;
+  }
+  .axes .triangle{
+      position:absolute;
+      left:144px;
+      top:-13px;
+      display:block;
+      padding:0px;
+      font-size:13px;
+  }
+
+
+  .dot[data-tip]:before {
+    content:'';
+    /* hides the tooltip when not hovered */
+    display:none;
+    content:'';
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid #1a1a1a;	
+    position:absolute;
+    top:0px;
+    left:0px;
+    z-index:8;
+    font-size:0;
+    line-height:0;
+    width:0;
+    height:0;
+}
+.dot[data-tip]:after {
+    display:none;
+    content:attr(data-tip);
+    position:absolute;
+    top:5px;
+    left:-35px;
+    padding:5px 8px;
+    background:#1a1a1a;
+    color:#fff;
+    z-index:9;
+    font-size: 0.75em;
+    height:18px;
+    line-height:18px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    white-space:nowrap;
+    word-wrap:normal;
+}
+.show_panel label{
+    font-family: "Helvetica Neue",arial,sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 1.5;
+}
+.dot[data-tip]:hover:before,
+.dot[data-tip]:hover:after {
+    display:block;
+}
+.show_panel{
+    padding-left: 20px;
+    padding-right: 20px;
+}
