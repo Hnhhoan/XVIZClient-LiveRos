@@ -21,8 +21,10 @@ export const XVIZ_WORKERS_MONITOR_INTERVAL = 1000; // report interval in  ms.
 
 export const HISTORY_SIZE = 16;
 
-export const DEFAULT_STATS_TITLE = 'Streetscape Performance Metrics';
+export const DEFAULT_STATS_TITLE = 'Frame Metrics';
 
+export const WIDTH=300;
+export const HEIGHT=200;
 export const COLOR_PALETTE = {
   WHITE: '#FFFFFF',
   BLACK: '#141414',
@@ -72,6 +74,108 @@ export const INITIAL_STATS = {counter: 0};
 for (const statName of Object.values(STATS_KEYS)) {
   INITIAL_STATS[statName] = [{x: INITIAL_STATS.counter, y: 0}];
 }
+/**CPU and GPU Memory Metrics *************************************/
+export const DEFAULT_CPU_GPU_MEMORY_STATS_TITLE = 'Memory Metrics';
+
+
+
+export const STATS_CPU_GPU_MEMORY_KEYS = {
+  BUFFERMEMORY: 'bufferMemory',
+  TEXTUREMEMORY: 'textureMemory',
+  RENDERBUFFERMEMORY: 'renderbufferMemory',
+  GPUMEMORY: 'gpuMemory'
+};
+
+export const STATS_CPU_GPU_MEMORY_NAMES = {
+  [STATS_CPU_GPU_MEMORY_KEYS.BUFFERMEMORY]: 'buffer Memory',
+  [STATS_CPU_GPU_MEMORY_KEYS.TEXTUREMEMORY]: 'texture Memory',
+  [STATS_CPU_GPU_MEMORY_KEYS.RENDERBUFFERMEMORY]: 'render buffer Memory',
+  [STATS_CPU_GPU_MEMORY_KEYS.GPUMEMORY]: 'gpu Memory'
+};
+
+export const STATS_CPU_GPU_MEMORY_COLORS = {
+  [STATS_CPU_GPU_MEMORY_KEYS.BUFFERMEMORY]: COLOR_PALETTE.BLUE,
+  [STATS_CPU_GPU_MEMORY_KEYS.TEXTUREMEMORY]: COLOR_PALETTE.GREEN,
+  [STATS_CPU_GPU_MEMORY_KEYS.RENDERBUFFERMEMORY]: COLOR_PALETTE.ORANGE,
+  [STATS_CPU_GPU_MEMORY_KEYS.GPUMEMORY]: COLOR_PALETTE.PURPLE
+};
+
+export const STATS_CPU_GPU_MEMORY_HELP = {
+  [STATS_CPU_GPU_MEMORY_KEYS.BUFFERMEMORY]: 'Memory of buffer.',
+  [STATS_CPU_GPU_MEMORY_KEYS.TEXTUREMEMORY]: 'Memory of texture.',
+  [STATS_CPU_GPU_MEMORY_KEYS.RENDERBUFFERMEMORY]: 'Memory of render buffer.',
+  [STATS_CPU_GPU_MEMORY_KEYS.GPUMEMORY]: 'Memory of GPU.'
+};
+
+export const INITIAL_CPU_GPU_MEMORY_STATS = {counter: 0};
+for (const statName of Object.values(STATS_CPU_GPU_MEMORY_KEYS)) {
+  INITIAL_CPU_GPU_MEMORY_STATS[statName] = [{x: INITIAL_CPU_GPU_MEMORY_STATS.counter, y: 0}];
+}
+/**END of CPU and GPU Memory Metrics *************************************/
+
+/**CPU and GPU Time Metrics *************************************/
+export const DEFAULT_CPU_GPU_TIME_STATS_TITLE = 'CPU GPU Time Metrics';
+
+
+
+export const STATS_CPU_GPU_TIME_KEYS = {
+  GPUTIME: 'gpuTime',
+  CPUTIME: 'cpuTime'
+};
+
+export const STATS_CPU_GPU_TIME_NAMES = {
+  [STATS_CPU_GPU_TIME_KEYS.GPUTIME]: 'gpu Time',
+  [STATS_CPU_GPU_TIME_KEYS.CPUTIME]: 'cpu Time'
+};
+
+export const STATS_CPU_GPU_TIME_COLORS = {
+  [STATS_CPU_GPU_TIME_KEYS.GPUTIME]: COLOR_PALETTE.BLUE,
+  [STATS_CPU_GPU_TIME_KEYS.CPUTIME]: COLOR_PALETTE.GREEN
+};
+
+export const STATS_CPU_GPU_TIME_HELP = {
+  [STATS_CPU_GPU_TIME_KEYS.GPUTIME]: 'GPU time.',
+  [STATS_CPU_GPU_TIME_KEYS.CPUTIME]: 'CPU time.'
+};
+
+export const INITIAL_CPU_GPU_TIME_STATS = {counter: 0};
+for (const statName of Object.values(STATS_CPU_GPU_TIME_KEYS)) {
+  INITIAL_CPU_GPU_TIME_STATS[statName] = [{x: INITIAL_CPU_GPU_TIME_STATS.counter, y: 0}];
+}
+/**END of CPU and GPU Time Metrics *************************************/
+
+/**CPU and GPU TPF Metrics *************************************/
+export const DEFAULT_CPU_GPU_TPF_STATS_TITLE = 'CPU GPU Time Per Frame Metrics';
+
+
+
+export const STATS_CPU_GPU_TPF_KEYS = {
+  GPUTIMEPERFRAME: 'gpuTimePerFrame',
+  CPUTIMEPERFRAME: 'cpuTimePerFrame'
+};
+
+export const STATS_CPU_GPU_TPF_NAMES = {
+  [STATS_CPU_GPU_TPF_KEYS.GPUTIMEPERFRAME]: 'Gpu Time per Frame',
+  [STATS_CPU_GPU_TPF_KEYS.CPUTIMEPERFRAME]: 'Cpu Time per Frame'
+};
+
+export const STATS_CPU_GPU_TPF_COLORS = {
+  [STATS_CPU_GPU_TPF_KEYS.GPUTIMEPERFRAME]: COLOR_PALETTE.BLUE,
+  [STATS_CPU_GPU_TPF_KEYS.CPUTIMEPERFRAME]: COLOR_PALETTE.GREEN
+};
+
+export const STATS_CPU_GPU_TPF_HELP = {
+  [STATS_CPU_GPU_TPF_KEYS.GPUTIMEPERFRAME]: 'GPU Time per Frame.',
+  [STATS_CPU_GPU_TPF_KEYS.CPUTIMEPERFRAME]: 'CPU Time per Frame.'
+};
+
+export const INITIAL_CPU_GPU_TPF_STATS = {counter: 0};
+for (const statName of Object.values(STATS_CPU_GPU_TPF_KEYS)) {
+  INITIAL_CPU_GPU_TPF_STATS[statName] = [{x: INITIAL_CPU_GPU_TPF_STATS.counter, y: 0}];
+}
+/**END of CPU and GPU TPF Metrics *************************************/
+
+
 
 export const TOOLTIP_STYLE = {
   arrowSize: 0,

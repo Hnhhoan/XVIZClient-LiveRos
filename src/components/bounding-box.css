@@ -1,1 +1,3 @@
 .bounding-box fieldset label {display: inline-block; width: 60px;}
+.bounding-box .bounding-box-frame {padding: 0px 0px 0px 10px;}
+.bounding-box .ButtonSection{margin-top: 10px;}

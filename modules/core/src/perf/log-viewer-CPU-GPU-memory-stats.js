@@ -22,23 +22,23 @@ import {MetricCard, MetricChart} from '@streetscape.gl/monochrome';
 
 import {
   HISTORY_SIZE,
-  STATS_NAMES,
+  STATS_CPU_GPU_MEMORY_NAMES,
   STYLES,
-  STATS_KEYS,
-  STATS_COLORS,
-  DEFAULT_STATS_TITLE,
-  STATS_HELP,
-  INITIAL_STATS,
+  STATS_CPU_GPU_MEMORY_KEYS,
+  STATS_CPU_GPU_MEMORY_COLORS,
+  DEFAULT_CPU_GPU_MEMORY_STATS_TITLE,
+  STATS_CPU_GPU_MEMORY_HELP,
+  INITIAL_CPU_GPU_MEMORY_STATS,
   WIDTH,
   HEIGHT
 } from './constants';
 
 const Help = () => {
   const help = [];
-  for (const [statName, statHelp] of Object.entries(STATS_HELP)) {
+  for (const [statName, statHelp] of Object.entries(STATS_CPU_GPU_MEMORY_HELP)) {
     help.push(
       <div key={statName} style={{marginBottom: 10}}>
-        <strong>{STATS_NAMES[statName]}</strong>
+        <strong>{STATS_CPU_GPU_MEMORY_NAMES[statName]}</strong>
         <div>{statHelp}</div>
       </div>
     );
@@ -49,11 +49,11 @@ const Help = () => {
 /**
  * Stat snapshot at a specific point in time.
  * @typedef {Object} StatsSnapshot
- * @property {Number} STATS_KEYS.FPS
- * @property {Number} STATS_KEYS.REDRAW
- * @property {Number} STATS_KEYS.FRAME_UPDATE
- * @property {Number} STATS_KEYS.LOADER_UPDATE
- * @property {Number} STATS_KEYS.LOADER_ERROR
+ * @property {Number} STATS_CPU_GPU_MEMORY_KEYS.BUFFERMEMORY
+ * @property {Number} STATS_CPU_GPU_MEMORY_KEYS.TEXTUREMEMORY
+ * @property {Number} STATS_CPU_GPU_MEMORY_KEYS.RENDERBUFFERMEMORY
+ * @property {Number} STATS_CPU_GPU_MEMORY_KEYS.GPUMEMORY
+ * 
  */
 
 /**
@@ -64,11 +64,10 @@ const Help = () => {
 
 /**
  * @typedef {Object} Stats - History {StatsSnapshot} over time.
- * @property {Array<StatValue>} STATS_KEYS.FPS
- * @property {Array<StatValue>} STATS_KEYS.REDRAW
- * @property {Array<StatValue>} STATS_KEYS.FRAME_UPDATE
- * @property {Array<StatValue>} STATS_KEYS.LOADER_UPDATE
- * @property {Array<StatValue>} STATS_KEYS.LOADER_ERROR
+ * @property {Array<StatValue>} STATS_CPU_GPU_MEMORY_KEYS.BUFFERMEMORY
+ * @property {Array<StatValue>} STATS_CPU_GPU_MEMORY_KEYS.TEXTUREMEMORY
+ * @property {Array<StatValue>} STATS_CPU_GPU_MEMORY_KEYS.RENDERBUFFERMEMORY
+ * @property {Array<StatValue>} STATS_CPU_GPU_MEMORY_KEYS.GPUMEMORY
  * @property {Number} counter
  */
 
@@ -80,7 +79,7 @@ const Help = () => {
 const _updateStats = (stats, statsSnapshot) => {
   stats.counter += 1;
 
-  for (const statName of Object.values(STATS_KEYS)) {
+  for (const statName of Object.values(STATS_CPU_GPU_MEMORY_KEYS)) {
     // Drop oldest stat value when we've reached the history size.
     if (stats[statName].length >= HISTORY_SIZE) {
       stats[statName] = stats[statName].slice(1);
@@ -102,8 +101,8 @@ const _updateStats = (stats, statsSnapshot) => {
  * @param {Object} props
  * @param {StatsSnapshot} props.statsSnapshot
  */
-export class LogViewerStats extends React.Component {
-  state = {stats: INITIAL_STATS};
+export class LogViewerCPUGPUMemoryStats extends React.Component {
+  state = {stats: INITIAL_CPU_GPU_MEMORY_STATS};
 
   componentWillUpdate(nextProps) {
     if (nextProps.statsSnapshot !== this.props.statsSnapshot) {
@@ -114,7 +113,7 @@ export class LogViewerStats extends React.Component {
 
   render() {
     const {counter, ...data} = this.state.stats;
-    const title = this.props.title || DEFAULT_STATS_TITLE;
+    const title = this.props.title || DEFAULT_CPU_GPU_MEMORY_STATS_TITLE;
     return (
       <div id="stats" style={STYLES.LOG_VIEWER.STATS}>
         <MetricCard title={title} description={<Help />} style={STYLES.LOG_VIEWER.METRIC_CARD}>
@@ -123,8 +122,8 @@ export class LogViewerStats extends React.Component {
             height={HEIGHT}
             data={data}
             highlightX={counter}
-            getColor={statKey => STATS_COLORS[statKey]}
-            formatTitle={statKey => STATS_NAMES[statKey]}
+            getColor={statKey => STATS_CPU_GPU_MEMORY_COLORS[statKey]}
+            formatTitle={statKey => STATS_CPU_GPU_MEMORY_NAMES[statKey]}
           />
         </MetricCard>
       </div>

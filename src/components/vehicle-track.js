@@ -33,14 +33,16 @@ class VehicleTrack extends React.PureComponent{
             return ;
       else
             return <div className="Vehicle-Track">
-            {data&&<p><small><b>Camera focus:</b></small></p>}
-            {data&&
-            <select onChange={(event )=>{
+            {data&&<fieldset>
+              <legend>
+              <b>Camera focus</b>
+              </legend>
+              <select onChange={(event )=>{
                 this.moveCamera({x:0,y:0,bearing:0,trackedVehicle:event.target.value});
             }}>
                 {data.map((name)=>{return <option key={name} value={name}>{name}</option>})}
             </select>
-            }
+            </fieldset>}
           </div>
     }
 }

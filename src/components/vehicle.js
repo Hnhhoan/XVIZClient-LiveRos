@@ -1,15 +1,29 @@
 import {setXVIZConfig, getXVIZConfig} from '@xviz/parser';
 import {
   //LogViewer,
-  PlaybackControl,
+  //PlaybackControl,
   StreamSettingsPanel,
   MeterWidget,
   TrafficLightWidget,
   TurnSignalWidget,
   XVIZPanel,
-  VIEW_MODE
+  VIEW_MODE,
+  //LogViewerStats,
+  //XVIZWorkerFarmStatus,
+  //XVIZWorkersMonitor,
+  //XVIZWorkersStatus
 } from 'streetscape.gl';
+//import {MetricCollector} from './metric-collector';
+import MetricCollectorContainer from './metric-collector';
+import {XVIZWorkerFarmStatus} from "../../modules/core/src/perf/xviz-worker-farm-status";
+import {XVIZWorkersMonitor} from "../../modules/core/src/perf/xviz-workers-monitor";
+import {XVIZWorkersStatus} from "../../modules/core/src/perf/xviz-workers-status";
+import {LogViewerStats} from "../../modules/core/src/perf/log-viewer-stats";
+import {LogViewerCPUGPUMemoryStats} from  "../../modules/core/src/perf/log-viewer-CPU-GPU-memory-stats";
+import {LogViewerCPUGPUTimeStats} from  "../../modules/core/src/perf/log-viewer-CPU-GPU-time-stats";
+import {LogViewerCPUGPUTPFStats} from "../../modules/core/src/perf/log-viewer-CPU-GPU-TPF-stats";
 import {LogViewer} from "../../modules/core/src/index"
+import {PlaybackControl} from "../../modules/core/src/index";
 import {Form} from '@streetscape.gl/monochrome';
 import {XVIZ_CONFIG, APP_SETTINGS, MAPBOX_TOKEN, MAP_STYLE, XVIZ_STYLE, CAR} from '../constants';
 import {XVIZStreamLoader} from 'streetscape.gl';
@@ -17,6 +31,8 @@ import { CollapseButton } from './collapse-button';
 import { CommandLine } from './command-line';
 import ViewDirectionContainer from './view-direction';
 import StreamSettingQueryContainer from './stream-setting-query';
+import StreamQueryContainer from './stream-query';
+import ObjectQueryContainer from './object-query';
 import StreamBufferInspectorContainer from './stream-buffer-inspector';
 import VehicleTrackContainer from './vehicle-track';
 import React from 'react';
@@ -27,6 +43,9 @@ import {load} from '@loaders.gl/core';
 import {registerLoaders} from '@loaders.gl/core';
 import {Geometry} from '@luma.gl/core'
 import BoundingBoxContainer from './bounding-box';
+//import PerformanceMetricsContainer from './performance-metrics';
+import PerformanceMetrics from './performance-metrics';
+import {STYLES} from '../constants';
 //import {generateFVCubeMesh} from '../ext/face-vertex-cube-mesh'
 //import { EditableGeoJsonLayer, DrawPolygonMode } from 'nebula.gl';
 
@@ -211,12 +230,14 @@ export class Vehicle extends React.PureComponent {
       worker: true,
       maxConcurrency: 4
     });
+    //this.vehicleLog.on("finish",()=>{alert("finish to show chart")})
     this.state = {
       log: this.vehicleLog,
       settings: {
         viewMode: 'PERSPECTIVE',
         showTooltip: false,
-        showMap: true
+        showMap: true,
+        showDebug: true
       },
       objectStates: {},
       panelStatus:"close",
@@ -227,8 +248,19 @@ export class Vehicle extends React.PureComponent {
         type: 'FeatureCollection',
         features: []
       },
-      boundingBoxes: {}
+      boundingBoxes: {},
+      metrics:[],
+      panels: [],
+      logGetReady:false,
+      // LogViewer perf stats
+      statsSnapshot: {},
+      // XVIZ Parser perf stats
+      backlog: 'NA',
+      dropped: 'NA',
+      workers: {}
     };
+
+    
     //this.hostServerNames=props.data.connectedHostes;
     //this.offServerNames=props.data.otherDatasets;
   }
@@ -285,16 +317,62 @@ export class Vehicle extends React.PureComponent {
     });
     //console.log(this.state.objectStates);
   }
+  componentWillUnmount() {
+    if (this.xvizWorkerMonitor) {
+      this.xvizWorkerMonitor.stop();
+    }
+  }
   async componentDidMount() {
     //document.title = this.props.data.vehicleId+'-'+this.props.data.host+'-'+this.props.data.scene;
-    this.state.log.on('error', console.error).connect();
-    this.state.log.on('ready',()=>
+    //this.state.log.on('error', console.error).connect();
+    const {log} = this.state;
+    log.on('ready',()=>
     {
-      console.log("this.state.log.getStreamSettings()");
-      console.log(this.state.log.getStreamSettings());
-    });
-  }
+      //console.log("this.state.log.getStreamSettings()");
+      //console.log(this.state.log.getStreamSettings());
+      //alert("Log get ready!");
+      const metadata = log.getMetadata();
+        this.setState({
+          panels: Object.keys((metadata && metadata.ui_config) || {}),
+          logGetReady:true
+        });
+    }).on('error', console.error).connect();
 
+    // Monitor the log
+    this.xvizWorkerMonitor = new XVIZWorkersMonitor({
+      numWorkers: log.options.maxConcurrency,
+      reportCallback: ({backlog, dropped, workers}) => {
+        this.setState({backlog, dropped, workers});
+      }
+    });
+    log._debug = (event, payload) => {
+      if (event === 'parse_message') {
+        this.xvizWorkerMonitor.update(payload);
+      }
+    };
+    this.xvizWorkerMonitor.start();
+  }
+  _renderPerf = () => {
+    const {statsSnapshot, backlog, dropped, workers} = this.state;
+    return this.state.settings.showDebug ? (
+      <div style={STYLES.PERF}>
+        <MetricCollectorContainer metrics={this.state.metrics} workers={workers}></MetricCollectorContainer>
+        <hr />
+        <XVIZWorkerFarmStatus backlog={backlog} dropped={dropped} />
+        <XVIZWorkersStatus workers={workers} />
+        <hr />
+        <LogViewerStats statsSnapshot={statsSnapshot} />
+        <hr />
+        <LogViewerCPUGPUMemoryStats statsSnapshot={statsSnapshot} />
+        <hr/>
+        {/**<LogViewerCPUGPUTimeStats statsSnapshot={statsSnapshot} />
+        <hr/>**/}
+        <LogViewerCPUGPUTPFStats statsSnapshot={statsSnapshot} />
+        
+        {/**<PerformanceMetrics metrics={this.state.metrics}/>**/}
+      </div>
+    ) : null;
+  };
   _updateBoundingBox=(changedboundingBoxes)=>{
     this.setState({
       boundingBoxes:{...this.state.boundingBoxes, ...changedboundingBoxes} 
@@ -310,7 +388,13 @@ export class Vehicle extends React.PureComponent {
       panelStatus:status
     });
   }
+  _isLogGetReady=()=>{
+    return this.state.logGetReady;
+  }
   //getServerNames=()=>{return {hostServerNames:this.hostServerNames,offServerNames:this.offServerNames.map((n,index)=>"ws://ds_"+index)}};
+  getServerNames=()=>{
+    return {hostServerNames:["ego-vehicle"],offServerNames:["ws://ds_0","ws://ds_1"]};
+  };
   render() {
     const {log, settings,boundingBoxes} = this.state;
     //console.log(log);
@@ -333,7 +417,12 @@ export class Vehicle extends React.PureComponent {
           <hr style={{margin:0}} />*/}
         {/**
           <StreamSettingQueryContainer log={log} getServerNames={this.getServerNames} highlightObject={this.highlightObject}/>
+          
           <hr style={{margin:0}} />*/}
+          <StreamQueryContainer log={log} getServerNames={this.getServerNames} />
+          <hr style={{margin:0}} />
+          <ObjectQueryContainer log={log} getServerNames={this.getServerNames} highlightObject={this.highlightObject}/>
+          <hr style={{margin:0}} />
           <VehicleTrackContainer viewState={this.state.viewState} trackedVehicle={this.state.trackedVehicle}
               viewOffset={this.state.viewOffset} log={log} moveCamera={this.moveCamera} setTrackedVehicle={this.setTrackedVehicle}/>
           <hr style={{margin:0}} />
@@ -358,6 +447,7 @@ export class Vehicle extends React.PureComponent {
           <hr />
           <XVIZPanel log={log} name="Metrics" />
           </div>
+          {this._renderPerf()}
         </div>
         <div id="log-panel">
           <div id="map-view">
@@ -381,6 +471,13 @@ export class Vehicle extends React.PureComponent {
               //  return true;
               //}}
               //debug={debug}
+              //debug={this._getMetrics}
+              debug={payload => 
+                {
+                  if(this._isLogGetReady())
+                    {this.setState({statsSnapshot: payload,metrics:[...this.state.metrics,payload]});}
+                    console.log(this._isLogGetReady());
+              }}
               //objectStates={this.state.objectStates}
               //onViewStateChange={objectStates => this.setState({objectStates})}
               boundingBoxes={boundingBoxes}
@@ -441,6 +538,7 @@ export class Vehicle extends React.PureComponent {
               formatTimestamp={x => new Date(x * TIMEFORMAT_SCALE).toUTCString()}
             />
           </div>
+          
         </div>
       </div>
     );

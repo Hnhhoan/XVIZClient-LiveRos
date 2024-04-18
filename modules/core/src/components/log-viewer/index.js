@@ -139,7 +139,7 @@ class LogViewer extends PureComponent {
     const viewState = this.props.viewState || this.state.viewState;
     const viewOffset = this.props.viewOffset || this.state.viewOffset;
     const objectStates = this.props.objectStates || this.state.objectStates;
-    console.log(this.props);
+    //console.log(this.props);
     return (
       <div onContextMenu={preventDefault}>
         <Core3DViewer

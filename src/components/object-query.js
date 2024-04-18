@@ -7,7 +7,7 @@ import 'codemirror/mode/sparql/sparql';
 import 'codemirror/addon/scroll/simplescrollbars';
 import { tree } from 'd3';
 
-class StreamSettingQuery extends React.PureComponent{
+class ObjectQuery extends React.PureComponent{
     constructor(props) {
       super(props);
       this.myNotify = React.createRef();
@@ -41,13 +41,15 @@ class StreamSettingQuery extends React.PureComponent{
         } catch (error) {
             return false;
         }
-        const settings={...log.getStreamSettings()} 
+        //const settings={...log.getStreamSettings()} 
             for (const stream in settings) {
                 if(stream.startsWith("/"))
                 settings[stream]=true;
             }
-            const data=queryData(frame,settings,query,enablePreSelecting,highlightObject);
-            log.updateStreamSettings(data.setting);
+            const data=queryData(frame,
+                //settings,
+                query,enablePreSelecting,highlightObject);
+            //log.updateStreamSettings(data.setting);
         return true;
     }
     render() {
@@ -70,8 +72,8 @@ class StreamSettingQuery extends React.PureComponent{
       else
       {
         //const s=initStreamSettings(this.props.log);
-            return <div  className='QueryComponent'>
-            <h2 style={{marginLeft:"30px",marginRight:"30px"}}>Query Stream</h2>
+            return <div className='QueryComponent'>
+            <h2 style={{marginLeft:"30px",marginRight:"30px"}}>Object Query</h2>
             <CodeMirror value={this.state.query} onChange={(code, data, value) => {
             this.setState({
               query: code,
@@ -131,72 +133,34 @@ class StreamSettingQuery extends React.PureComponent{
         }
     }
 }
-/*set all to false */
-const DEFAULT_STREAMS=[
-"/tracklets/label",
-"/frame",
-"/lidar_points",
-"/carview/forward/points",
-"/carview/left-forward/points",
-"/carview/left/points",
-"/carview/right-forward/points",
-"/carview/right/points",
-"/carview/backward/points",
-"/view_volume",
-"/carview/forward",
-"/carview/left-forward",
-"/carview/left",
-"/carview/right-forward",
-"/carview/right",
-"/carview/backward"
-
-];
-const OBJECT_STREAMS=[
-"/tracklets/label",
-"/frame",
-"/lidar_points",
-"/carview/forward/points",
-"/carview/left-forward/points",
-"/carview/left/points",
-"/carview/right-forward/points",
-"/carview/right/points",
-"/carview/backward/points",
-"/view_volume",
-"/lidar/points",
-"/carview/forward",
-"/carview/left-forward",
-"/carview/left",
-"/carview/right-forward",
-"/carview/right",
-"/carview/backward"
-];
-const ALL_STREAMS=[];
 
 const queryObject={
-    streams:{hostStreams:[],sources:[{server:"A",streams:[]}]},
+    //streams:{hostStreams:[],sources:[{server:"A",streams:[]}]},
     objects:{hostObjects:[],sources:[{server:"A",objects:[]}]}
 }
-function queryData(frame,setting,queryObject,enablePreSelecting,highlightObject){
+function queryData(frame,
+    //setting,
+    queryObject,enablePreSelecting,highlightObject){
     //queryObject=JSON.parse(queryObject);
     queryObject= (queryObject==null||queryObject==undefined)?{
-        streams:{hostStreams:DEFAULT_STREAMS,sources:[]},
+        //streams:{hostStreams:DEFAULT_STREAMS,sources:[]},
         objects:{hostObjects:["CAR","VAN","PEDESTRIAN","CYCLIST"],sources:[]}
     }:queryObject;
-    queryObject.streams=(queryObject.streams==null||queryObject.streams==undefined)?{hostStreams:"DEFAULT_STREAMS",sources:[]}:queryObject.streams;
+    //queryObject.streams=(queryObject.streams==null||queryObject.streams==undefined)?{hostStreams:"DEFAULT_STREAMS",sources:[]}:queryObject.streams;
     queryObject.objects=(queryObject.objects==null||queryObject.objects==undefined)?{hostObjects:[],sources:[]}:queryObject.objects;
-    queryObject.streams.hostStreams=(queryObject.streams.hostStreams==null||queryObject.streams.hostStreams==undefined||queryObject.streams.hostStreams.length<=0)?"DEFAULT_STREAMS":queryObject.streams.hostStreams;
-    queryObject.streams.sources=(queryObject.streams.sources==null||queryObject.streams.sources==undefined)?[]:queryObject.streams.sources;
+    //queryObject.streams.hostStreams=(queryObject.streams.hostStreams==null||queryObject.streams.hostStreams==undefined||queryObject.streams.hostStreams.length<=0)?"DEFAULT_STREAMS":queryObject.streams.hostStreams;
+    //queryObject.streams.sources=(queryObject.streams.sources==null||queryObject.streams.sources==undefined)?[]:queryObject.streams.sources;
     queryObject.objects.hostObjects=(queryObject.objects.hostObjects==null||queryObject.objects.hostObjects==undefined)?[]:queryObject.objects.hostObjects;
     queryObject.objects.sources=(queryObject.objects.sources==null||queryObject.objects.sources==undefined)?[]:queryObject.objects.sources;
-    var i=queryObject.streams.sources.length;
+    /*var i=queryObject.streams.sources.length;
     while (i--) {
         if (queryObject.streams.sources[i].server==null||queryObject.streams.sources[i].server==undefined||queryObject.streams.sources[i].server.length==0) { 
             queryObject.streams.sources[i].splice(i, 1);
         }else{
             queryObject.streams.sources[i].streams=(queryObject.streams.sources[i].streams==null||queryObject.streams.sources[i].streams==undefined)?"DEFAULT_STREAMS":queryObject.streams.sources[i].streams;
         }
-    }
-    i=queryObject.objects.sources.length;
+    }*/
+    var i=queryObject.objects.sources.length;
     while (i--) {
         if (queryObject.objects.sources[i].server==null||queryObject.objects.sources[i].server==undefined||queryObject.objects.sources[i].server.length==0) { 
             queryObject.objects.sources[i].splice(i, 1);
@@ -205,7 +169,7 @@ function queryData(frame,setting,queryObject,enablePreSelecting,highlightObject)
         }
     }
     //check type of hostStreams,hostObjects,streams,objects is array if not check text
-    var getStreamSettings=(queryObject,currentSetting,)=>{
+    /*var getStreamSettings=(queryObject,currentSetting,)=>{
         const getOffStreams=(streams)=>{
             var off_streams=[];
             switch (streams) {
@@ -287,7 +251,7 @@ function queryData(frame,setting,queryObject,enablePreSelecting,highlightObject)
         }
         }) 
         return settings;
-    }
+    }*/
     var getSelectedObjectFromQueryObject=(queryObject,frame)=>{
         const selectObjects=(objectStream,types)=>{
             types=types.map(t=>t.toLowerCase());
@@ -326,7 +290,7 @@ function queryData(frame,setting,queryObject,enablePreSelecting,highlightObject)
         })
         return result;
     }
-    return {setting:getStreamSettings(queryObject,setting),objects:getSelectedObjectFromQueryObject(queryObject,frame)}
+    return {objects:getSelectedObjectFromQueryObject(queryObject,frame)}
 }
 
 
@@ -336,5 +300,5 @@ const getLogState = (log) => ({
   log:log
   //highlightObject: highlightObject
 });
-const StreamSettingQueryContainer = connectToLog({Component: StreamSettingQuery, getLogState});
-export default StreamSettingQueryContainer;
+const ObjectQueryContainer = connectToLog({Component: ObjectQuery, getLogState});
+export default ObjectQueryContainer;

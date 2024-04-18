@@ -7,7 +7,7 @@ import 'codemirror/mode/sparql/sparql';
 import 'codemirror/addon/scroll/simplescrollbars';
 import { tree } from 'd3';
 
-class StreamSettingQuery extends React.PureComponent{
+class StreamQuery extends React.PureComponent{
     constructor(props) {
       super(props);
       this.myNotify = React.createRef();
@@ -18,6 +18,7 @@ class StreamSettingQuery extends React.PureComponent{
       let {hostServerNames,offServerNames}=props.getServerNames();
       this.serverNames=(hostServerNames.concat(offServerNames)).filter(name=>name.trim().length);
       const Qtext=this.serverNames.reduce((a,name,index)=>{
+        //default query
       a.streamsQuery+=(index?'\r\n,':'')+'{"server":"'+name+'","streams":"DEFAULT_STREAMS"}';
       a.objectsQuery+=(index?'\r\n,':'')+'{"server":"'+name+'","objects":[]}';
       return a;
@@ -27,14 +28,18 @@ class StreamSettingQuery extends React.PureComponent{
     }   
     _readyData() {
        
-       const {frame,log,highlightObject} = this.props;
+       const {frame,log
+        //,highlightObject
+        } = this.props;
         if(frame&&this.state.executing)
         {
             this._execute(this.state.query,this.props.frame,this.props.log,this.state.enablePreSelecting,this.props.highlightObject);
         }       
         return {isReady:true,hasData:true};
     }
-    _execute(query,frame,log,enablePreSelecting,highlightObject){
+    _execute(query,frame,log
+        //,enablePreSelecting,highlightObject
+        ){
         try {
             query=JSON.parse(query);
             //console.log(query);
@@ -46,7 +51,9 @@ class StreamSettingQuery extends React.PureComponent{
                 if(stream.startsWith("/"))
                 settings[stream]=true;
             }
-            const data=queryData(frame,settings,query,enablePreSelecting,highlightObject);
+            const data=queryData(frame,settings,query
+                //,enablePreSelecting,highlightObject
+                );
             log.updateStreamSettings(data.setting);
         return true;
     }
@@ -70,13 +77,14 @@ class StreamSettingQuery extends React.PureComponent{
       else
       {
         //const s=initStreamSettings(this.props.log);
-            return <div  className='QueryComponent'>
-            <h2 style={{marginLeft:"30px",marginRight:"30px"}}>Query Stream</h2>
+            return <div className='QueryComponent'>
+            <h2 style={{marginLeft:"30px",marginRight:"30px"}}>Stream Query</h2>
             <CodeMirror value={this.state.query} onChange={(code, data, value) => {
             this.setState({
               query: code,
               executing:false
             })}}  options={options}/>
+            {/***
             <fieldset>
             <legend><b>Execute Rule</b></legend>
             <div>
@@ -103,20 +111,23 @@ class StreamSettingQuery extends React.PureComponent{
             </label>
             </div>
             </fieldset>
+             */}
             <button className='ExecuteButton' onClick={()=>{
                 if(!this.state.executing)     
                 {
-                    const runable= this._execute(this.state.query,this.props.frame,this.props.log,this.state.enablePreSelecting,this.props.highlightObject);
+                    const runable= this._execute(this.state.query,this.props.frame,this.props.log
+                        //,this.state.enablePreSelecting,this.props.highlightObject
+                        );
                     if(runable)
                     {
-                        this.setState({
+                       /*this.setState({
                             enablePreSelecting:this.rd_selectRule_true.current.checked,
                             executing:!this.rd_executedTime_true.current.checked
                         });
                         this.myNotify.current.innerText ="Query is Activated!";
                         console.log("enablePreSelecting:"+this.rd_selectRule_true.current.checked);
                         console.log("executing:"+!this.rd_executedTime_true.current.checked);
-                        console.log(this.state);
+                        console.log(this.state);*/
                     }else{
                         this.myNotify.current.innerText ="JSON Syntax Error!!!";
                     }
@@ -133,7 +144,7 @@ class StreamSettingQuery extends React.PureComponent{
 }
 /*set all to false */
 const DEFAULT_STREAMS=[
-"/tracklets/label",
+/*"/tracklets/label",
 "/frame",
 "/lidar_points",
 "/carview/forward/points",
@@ -148,11 +159,11 @@ const DEFAULT_STREAMS=[
 "/carview/left",
 "/carview/right-forward",
 "/carview/right",
-"/carview/backward"
+"/carview/backward"*/
 
 ];
 const OBJECT_STREAMS=[
-"/tracklets/label",
+/*"/tracklets/label",
 "/frame",
 "/lidar_points",
 "/carview/forward/points",
@@ -168,7 +179,7 @@ const OBJECT_STREAMS=[
 "/carview/left",
 "/carview/right-forward",
 "/carview/right",
-"/carview/backward"
+"/carview/backward"*/
 ];
 const ALL_STREAMS=[];
 
@@ -176,18 +187,20 @@ const queryObject={
     streams:{hostStreams:[],sources:[{server:"A",streams:[]}]},
     objects:{hostObjects:[],sources:[{server:"A",objects:[]}]}
 }
-function queryData(frame,setting,queryObject,enablePreSelecting,highlightObject){
+function queryData(frame,setting,queryObject
+    //,enablePreSelecting,highlightObject
+    ){
     //queryObject=JSON.parse(queryObject);
     queryObject= (queryObject==null||queryObject==undefined)?{
-        streams:{hostStreams:DEFAULT_STREAMS,sources:[]},
-        objects:{hostObjects:["CAR","VAN","PEDESTRIAN","CYCLIST"],sources:[]}
+        streams:{hostStreams:DEFAULT_STREAMS,sources:[]}
+        //,objects:{hostObjects:["CAR","VAN","PEDESTRIAN","CYCLIST"],sources:[]}
     }:queryObject;
     queryObject.streams=(queryObject.streams==null||queryObject.streams==undefined)?{hostStreams:"DEFAULT_STREAMS",sources:[]}:queryObject.streams;
-    queryObject.objects=(queryObject.objects==null||queryObject.objects==undefined)?{hostObjects:[],sources:[]}:queryObject.objects;
+    //queryObject.objects=(queryObject.objects==null||queryObject.objects==undefined)?{hostObjects:[],sources:[]}:queryObject.objects;
     queryObject.streams.hostStreams=(queryObject.streams.hostStreams==null||queryObject.streams.hostStreams==undefined||queryObject.streams.hostStreams.length<=0)?"DEFAULT_STREAMS":queryObject.streams.hostStreams;
     queryObject.streams.sources=(queryObject.streams.sources==null||queryObject.streams.sources==undefined)?[]:queryObject.streams.sources;
-    queryObject.objects.hostObjects=(queryObject.objects.hostObjects==null||queryObject.objects.hostObjects==undefined)?[]:queryObject.objects.hostObjects;
-    queryObject.objects.sources=(queryObject.objects.sources==null||queryObject.objects.sources==undefined)?[]:queryObject.objects.sources;
+    //queryObject.objects.hostObjects=(queryObject.objects.hostObjects==null||queryObject.objects.hostObjects==undefined)?[]:queryObject.objects.hostObjects;
+    //queryObject.objects.sources=(queryObject.objects.sources==null||queryObject.objects.sources==undefined)?[]:queryObject.objects.sources;
     var i=queryObject.streams.sources.length;
     while (i--) {
         if (queryObject.streams.sources[i].server==null||queryObject.streams.sources[i].server==undefined||queryObject.streams.sources[i].server.length==0) { 
@@ -195,7 +208,7 @@ function queryData(frame,setting,queryObject,enablePreSelecting,highlightObject)
         }else{
             queryObject.streams.sources[i].streams=(queryObject.streams.sources[i].streams==null||queryObject.streams.sources[i].streams==undefined)?"DEFAULT_STREAMS":queryObject.streams.sources[i].streams;
         }
-    }
+    }/*
     i=queryObject.objects.sources.length;
     while (i--) {
         if (queryObject.objects.sources[i].server==null||queryObject.objects.sources[i].server==undefined||queryObject.objects.sources[i].server.length==0) { 
@@ -203,9 +216,9 @@ function queryData(frame,setting,queryObject,enablePreSelecting,highlightObject)
         }else{
             queryObject.objects.sources[i].objects=(queryObject.objects.sources[i].objects==null||queryObject.objects.sources[i].objects==undefined)?[]:queryObject.objects.sources[i].objects;
         }
-    }
+    }*/
     //check type of hostStreams,hostObjects,streams,objects is array if not check text
-    var getStreamSettings=(queryObject,currentSetting,)=>{
+    var getStreamSettings=(queryObject,currentSetting)=>{
         const getOffStreams=(streams)=>{
             var off_streams=[];
             switch (streams) {
@@ -286,9 +299,10 @@ function queryData(frame,setting,queryObject,enablePreSelecting,highlightObject)
             settings=selectStreamsBasedOnOn_Stream(settings,on_streams,source.server);// select streams from host
         }
         }) 
+        console.log(settings);
         return settings;
     }
-    var getSelectedObjectFromQueryObject=(queryObject,frame)=>{
+    /**var getSelectedObjectFromQueryObject=(queryObject,frame)=>{
         const selectObjects=(objectStream,types)=>{
             types=types.map(t=>t.toLowerCase());
             const objs=[];
@@ -325,8 +339,10 @@ function queryData(frame,setting,queryObject,enablePreSelecting,highlightObject)
                 result.concat(selectObjects(frame.streams[s.server+"/tracklets/objects"],s.objects))
         })
         return result;
+    }*/
+    return {setting:getStreamSettings(queryObject,setting)
+        //,objects:getSelectedObjectFromQueryObject(queryObject,frame)
     }
-    return {setting:getStreamSettings(queryObject,setting),objects:getSelectedObjectFromQueryObject(queryObject,frame)}
 }
 
 
@@ -336,5 +352,5 @@ const getLogState = (log) => ({
   log:log
   //highlightObject: highlightObject
 });
-const StreamSettingQueryContainer = connectToLog({Component: StreamSettingQuery, getLogState});
-export default StreamSettingQueryContainer;
+const StreamQueryContainer = connectToLog({Component: StreamQuery, getLogState});
+export default StreamQueryContainer;

@@ -100,8 +100,8 @@ class BoundingBox extends React.PureComponent{
                 timestamps.map(f=>{return <option key={f} value={f}>{f}</option>})
                 }
             </select>}
-            <div>
-            <button onClick={()=>{
+            <div className='ButtonSection'>
+            <button className={'ExecuteButton'} onClick={()=>{
                const box= generateB_Box({position: addMetersToLngLat(frame.origin,[10*Math.random(),10*Math.random(),0.5])});
                const boxes={};
                boxes[timestamp]=boundingBoxes[timestamp]?boundingBoxes[timestamp]:[]
@@ -109,7 +109,7 @@ class BoundingBox extends React.PureComponent{
                this.updateBoundingBox(boxes);
                //addBoxToStreamBuffer(box,timestamp,frame,log);
                //log.seek(timestamp);
-            }}>add a box</button><button onClick={()=>{
+            }}><b>Add Box </b></button><button className={'ExecuteButton'} onClick={()=>{
                 
               timestamps.forEach(timestamp => {
                 const boundingBoxStream={
@@ -121,8 +121,9 @@ class BoundingBox extends React.PureComponent{
                 this.props.log.streamBuffer.insert(boundingBoxStream);
               });
               //console.log(this.props.log.streamBuffer.streams[this.state.stream]);
-            }}>blend in buffer</button>
+            }} style={{margin:'0px 0px 0px 10px'}}><b> Blend </b></button>
             </div>
+
             </div>
             {boxes&&<div className='list-of-box'>
                 {boxes.map(box=>{

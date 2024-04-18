@@ -1,0 +1,3 @@
+.metric-collector .txtLabel{ display: inline-block;width:120px ;}
+.metric-collector label{ display: block;width: 100%;}
+.metric-collector input[type="text"] {width:120px;}
